@@ -487,9 +487,10 @@ export const ChatScreen = ({ navigation }: Props) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        {showSubscriptionOverlay && (
-          <View className="absolute inset-0 bg-black/80 z-50 items-center justify-center p-6">
-            <View className="bg-white dark:bg-dark-surface rounded-lg p-6 w-full max-w-md">
+      {showSubscriptionOverlay && (
+        <View className="absolute inset-0 bg-black/80 z-50 items-center justify-center p-6">
+          <View className="bg-white dark:bg-dark-surface rounded-lg w-full max-w-md relative">
+            <View className="p-6 pt-12">
               <View className="items-center mb-6">
                 <View className="w-16 h-16 rounded-full bg-red-500 items-center justify-center mb-4">
                   <Ionicons name="lock-closed" size={32} color="white" />
@@ -501,21 +502,25 @@ export const ChatScreen = ({ navigation }: Props) => {
                   You've reached your free message limit. Please subscribe to continue using BankrAI.
                 </Text>
               </View>
+
               <PaymentSheet
+                onClose={() => setShowSubscriptionOverlay(false)}
                 onSuccess={async () => {
                   showNotification('Payment successful! Welcome to BankrAI.', 'success');
                   try {
                     await refreshUser();
-                    setShowSubscriptionOverlay(false);
                   } catch (error) {
                     console.error('Error refreshing user data:', error);
                     showNotification('Payment successful, but failed to refresh user data.', 'error');
+                  } finally {
+                    setShowSubscriptionOverlay(false);
                   }
                 }}
                 onError={(error) => {
                   showNotification(error.message, 'error');
                 }}
               />
+
               <TouchableOpacity
                 className="mt-2 flex-row items-center justify-center p-4"
                 onPress={async () => {
@@ -532,12 +537,13 @@ export const ChatScreen = ({ navigation }: Props) => {
               </TouchableOpacity>
             </View>
           </View>
-        )}
+        </View>
+      )}
 
-        <View
-          className="px-4 flex-row items-center justify-between border-b border-gray-200 dark:border-gray-700"
-          style={{ paddingTop: insets.top }}
-        >
+      <View
+        className="px-4 flex-row items-center justify-between border-b border-gray-200 dark:border-gray-700"
+        style={{ paddingTop: insets.top }}
+      >
           <TouchableOpacity
             className="p-2"
             onPress={() => setIsSidebarOpen(!isSidebarOpen)}
