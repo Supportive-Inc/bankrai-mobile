@@ -4,10 +4,14 @@ import { MainStackParamList } from '../../types/navigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import AppScreen from '../../components/Screen';
+import AppText from 'components/AppText';
+import AppStateStore from 'Store/AppStateStore';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'ChangePassword'>;
 
 export const ChangePasswordScreen = ({ navigation }: Props) => {
+  const { darkMode } = AppStateStore();
   const insets = useSafeAreaInsets();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -19,26 +23,23 @@ export const ChangePasswordScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View 
+    <AppScreen
       className="flex-1 bg-background dark:bg-dark-background"
-      style={{ paddingTop: insets.top }}
-    >
+      style={{ paddingTop: insets.top }}>
       {/* Header */}
-      <View className="px-4 py-4 flex-row items-center justify-between border-b border-gray-200 dark:border-gray-700">
-        <TouchableOpacity
-          className="p-2"
-          onPress={() => navigation.goBack()}
-        >
+      <View
+        style={{
+          borderColor: darkMode ? '#374151' : '#e5e7eb',
+        }}
+        className="flex-row items-center justify-between border-b border-gray-200 px-4 py-4 dark:border-gray-700">
+        <TouchableOpacity className="p-2" onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="#007AFF" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-primary dark:text-dark-primary">
+        <AppText className="font-bold text-xl text-primary dark:text-dark-primary">
           Change Password
-        </Text>
-        <TouchableOpacity
-          className="p-2"
-          onPress={handleSave}
-        >
-          <Text className="text-primary dark:text-dark-primary font-medium">Save</Text>
+        </AppText>
+        <TouchableOpacity className="p-2" onPress={handleSave}>
+          <AppText className="font-medium text-primary dark:text-dark-primary">Save</AppText>
         </TouchableOpacity>
       </View>
 
@@ -46,9 +47,19 @@ export const ChangePasswordScreen = ({ navigation }: Props) => {
       <ScrollView className="flex-1 p-4">
         <View className="space-y-4">
           <View>
-            <Text className="text-gray-600 dark:text-gray-400 mb-2">Current Password</Text>
+            <AppText
+              darkModeColor="#9ca3af"
+              lightModeColor="#4b5563"
+              className="mb-2 text-gray-600 dark:text-gray-400">
+              Current Password
+            </AppText>
             <TextInput
-              className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-primary dark:text-dark-primary"
+              style={{
+                backgroundColor: darkMode ? '#1E1E1E' : '#ffffff',
+                borderColor: darkMode ? '#374151' : '#e5e7eb',
+                color: darkMode ? '#fff' : '#000',
+              }}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-primary dark:border-gray-700 dark:bg-dark-surface dark:text-dark-primary"
               value={currentPassword}
               onChangeText={setCurrentPassword}
               placeholder="Enter current password"
@@ -58,9 +69,19 @@ export const ChangePasswordScreen = ({ navigation }: Props) => {
           </View>
 
           <View>
-            <Text className="text-gray-600 dark:text-gray-400 mb-2">New Password</Text>
+            <AppText
+              darkModeColor="#9ca3af"
+              lightModeColor="#4b5563"
+              className="mb-2 text-gray-600 dark:text-gray-400">
+              New Password
+            </AppText>
             <TextInput
-              className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-primary dark:text-dark-primary"
+              style={{
+                backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+                borderColor: darkMode ? '#374151' : '#e5e7eb',
+                color: darkMode ? '#fff' : '#000',
+              }}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-primary dark:border-gray-700 dark:bg-dark-surface dark:text-dark-primary"
               value={newPassword}
               onChangeText={setNewPassword}
               placeholder="Enter new password"
@@ -70,9 +91,14 @@ export const ChangePasswordScreen = ({ navigation }: Props) => {
           </View>
 
           <View>
-            <Text className="text-gray-600 dark:text-gray-400 mb-2">Confirm New Password</Text>
+            <Text className="mb-2 text-gray-600 dark:text-gray-400">Confirm New Password</Text>
             <TextInput
-              className="bg-white dark:bg-dark-surface border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-primary dark:text-dark-primary"
+              style={{
+                backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+                borderColor: darkMode ? '#374151' : '#e5e7eb',
+                color: darkMode ? '#fff' : '#000',
+              }}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-primary dark:border-gray-700 dark:bg-dark-surface dark:text-dark-primary"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               placeholder="Confirm new password"
@@ -82,6 +108,6 @@ export const ChangePasswordScreen = ({ navigation }: Props) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </AppScreen>
   );
-}; 
+};

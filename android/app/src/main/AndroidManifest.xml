@@ -26,16 +26,12 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="bankrai"/>
         <data android:scheme="com.supportive.bankrai"/>
+        <data android:scheme="exp+bankrai"/>
       </intent-filter>
       <intent-filter android:autoVerify="true" data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="bankrai"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-      </intent-filter>
-      <intent-filter data-generated="true">
-        <action android:name="android.intent.action.VIEW"/>
-        <data android:scheme="bankrai"/>
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>

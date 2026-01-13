@@ -42,17 +42,33 @@ export const chatService = {
   async getChat(chatId: string): Promise<Chat> {
     try {
       const response = await api.get<Chat>(`/chats/${chatId}`);
-      return response.data;
+
+      // Normalize the messages to match frontend expectations
+      const chat = response.data;
+      if (chat.messages) {
+        chat.messages = chat.messages.map(message => ({
+          ...message,
+          // Convert backend roles to frontend roles
+          role: message.role === 'human' ? 'user' : message.role === 'ai' ? 'model' : message.role,
+          // Ensure date fields are Date objects
+          createdAt: new Date(message.createdAt || message.created_at),
+          updatedAt: new Date(message.updatedAt || message.updated_at),
+          // Normalize snake_case to camelCase if needed
+          chatId: message.chatId || message.chat_id
+        }));
+      }
+
+      return chat;
     } catch (error: any) {
       console.error('Get chat error:', {
         status: error.response?.status,
         data: error.response?.data,
         message: error.message
       });
-      
+
       throw new Error(
-        error.response?.data?.message || 
-        error.message || 
+        error.response?.data?.message ||
+        error.message ||
         'Failed to fetch chat. Please try again.'
       );
     }
@@ -82,7 +98,7 @@ export const chatService = {
 
   async sendMessage(chatId: string, content: string): Promise<Message> {
     try {
-      const response = await api.post<Message>(`/chats/${chatId}/messages`, { content });
+      const response = await api.post<Message>(`/messages`, {chatId,content });
       return response.data;
     } catch (error: any) {
       console.error('Send message error:', {

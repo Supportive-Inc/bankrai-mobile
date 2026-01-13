@@ -59,7 +59,7 @@ export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       const response = await api.post<AuthResponse>('/auth/login', credentials);
-      console.log('login', response.status, response.data);
+      console.log('login', response.message, response.data);
       return response.data;
     } catch (error: any) {
       console.log('login', error);
@@ -76,11 +76,13 @@ export const authService = {
 
   async signup(data: SignupData): Promise<AuthResponse> {
     try {
-      const response = await api.post<AuthResponse>('/auth/signup', data);
+        console.log('this is data:', data);
+      const response = await api.post<AuthResponse>('/auth/register', data);
+      console.log('disss', response);
       return response.data;
     } catch (error: any) {
 
-      console.log('signup', error);
+      console.log('signup', error.response);
 
       console.error('Signup error:', {
         status: error.response?.status,
@@ -263,7 +265,7 @@ export const authService = {
  async syncIAPSubscription(userData: Partial<User>): Promise<void> {
    try {
        const user = await authService.getCurrentUser();
-    const response = await api.post(`/users/${user.id}/sync-iap-subscription`);
+    const response = await api.post('/users/me/sync-iap-subscription');
     console.log(response.status);
     console.log(response.data);
      return response.data;

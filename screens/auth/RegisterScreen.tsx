@@ -11,7 +11,8 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 export const RegisterScreen = ({ navigation }: Props) => {
   const { login } = useAuth();
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -24,7 +25,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
       setIsLoading(true);
 
       // Validate inputs
-      if (!fullName || !email || !password || !confirmPassword) {
+      if (!firstName || !lastName || !email || !password || !confirmPassword) {
         setError('Please fill in all fields');
         return;
       }
@@ -46,9 +47,11 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
       const response = await authService.signup({
         email,
-        fullName,
         password,
+        firstName,
+        lastName
       });
+  console.log('auth sign uo finished!!!!!!');
 
       // Navigate to login with pre-filled credentials
       navigation.navigate('Login', {
@@ -96,12 +99,19 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
           <View className="space-y-4">
             <Input
-              label="Full Name"
-              placeholder="Enter your full name"
+              label="First Name"
+              placeholder="Enter your first name"
               autoCapitalize="words"
-              value={fullName}
-              onChangeText={setFullName}
+              value={firstName}
+              onChangeText={setFirstName}
             />
+             <Input
+                          label="Last Name"
+                          placeholder="Enter your last name"
+                          autoCapitalize="words"
+                          value={lastName}
+                          onChangeText={setLastName}
+                        />
             <Input
               label="Email"
               placeholder="Enter your email"

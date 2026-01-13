@@ -1,4 +1,10 @@
-import { LinkSuccess, LinkExit, LinkIOSPresentationStyle, LinkLogLevel } from 'react-native-plaid-link-sdk';
+import {
+  LinkSuccess,
+  LinkExit,
+  LinkIOSPresentationStyle,
+  LinkLogLevel,
+} from 'react-native-plaid-link-sdk';
+
 import { api } from '../../config/api';
 
 export const createLinkToken = async (userId: string) => {
@@ -15,12 +21,16 @@ export const createLinkToken = async (userId: string) => {
   }
 };
 
-export const exchangePublicToken = async (publicToken: string, userId: string, instituteId: string) => {
+export const exchangePublicToken = async (
+  publicToken: string,
+  userId: string,
+  instituteId: string
+) => {
   try {
     const response = await api.post('/plaid/access_token', {
       public_token: publicToken,
       user_id: userId,
-      institute_id: instituteId
+      institute_id: instituteId,
     });
     return response.data;
   } catch (error: any) {
@@ -30,4 +40,4 @@ export const exchangePublicToken = async (publicToken: string, userId: string, i
     console.error('Error exchanging public token:', error);
     throw error;
   }
-}; 
+};

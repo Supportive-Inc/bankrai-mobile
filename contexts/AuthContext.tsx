@@ -71,9 +71,11 @@ const refreshSubscription = async (): Promise<boolean> => {
   try {
     console.log('[Auth] Refreshing user data...');
     const updatedUser = await refreshUser(); // Get the return value directly
+    console.log('updated user===================');
+          console.log(updatedUser);
 
 
-    if (updatedUser?.hasPaidAccess) {
+    if (updatedUser?.has_paid_access) {
       console.log('[Auth] Active subscription found in database');
       setIsSubscribed(true);
       return true;
@@ -111,9 +113,10 @@ const refreshSubscription = async (): Promise<boolean> => {
   }
 };
 
-  const login = async (token: string) => {
+  const login = async (token: string, refreshToken : string) => {
     try {
       await AsyncStorage.setItem('auth_token', token);
+      await AsyncStorage.setItem('refresh_token', refreshToken);
       const userData = await authService.getProfile();
       setUser(userData);
       setIsAuthenticated(true);
