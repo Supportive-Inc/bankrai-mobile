@@ -1,12 +1,11 @@
-import { View, Text, Image, Modal, Linking } from 'react-native';
+import { View, Text, Modal, Linking, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../types/navigation';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../contexts/AuthContext';
-import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../../services/auth';
+import { useState } from 'react';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -16,7 +15,9 @@ export const LoginScreen = ({ navigation, route }: Props) => {
   const [password, setPassword] = useState(route.params?.password || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showVerificationModal, setShowVerificationModal] = useState(route.params?.fromRegister || false);
+  const [showVerificationModal, setShowVerificationModal] = useState(
+    route.params?.fromRegister || false
+  );
 
   const handleLogin = async () => {
     try {
@@ -29,20 +30,20 @@ export const LoginScreen = ({ navigation, route }: Props) => {
       }
 
       const response = await authService.login({ email, password });
-      await login(response.session.access_token);
-    } catch (err:any) {
+      console.log('this is response', response);
+      await login(response.token, response.refreshToken);
+    } catch (err: any) {
       console.error('Login screen error:', err);
-      console.log('err: ', err, typeof err, err.message);
       if (err.message) {
         const status = err.message;
         switch (status) {
-          case "401":
+          case '401':
             setError('Invalid email or password. Please try again.');
             break;
-          case "404":
+          case '404':
             setError('Account not found. Please check your email or sign up.');
             break;
-          case "429":
+          case '429':
             setError('Too many login attempts. Please try again later.');
             break;
           default:
@@ -60,6 +61,7 @@ export const LoginScreen = ({ navigation, route }: Props) => {
 
   return (
     <View className="flex-1 bg-background dark:bg-dark-background">
+      {/* Verification Modal */}
       <Modal
         visible={showVerificationModal}
         transparent
@@ -76,8 +78,8 @@ export const LoginScreen = ({ navigation, route }: Props) => {
                 Please check your email for a verification link before logging in.
               </Text>
             </View>
-            <Button 
-              title="Got it" 
+            <Button
+              title="Got it"
               onPress={() => setShowVerificationModal(false)}
             />
           </View>
@@ -120,20 +122,37 @@ export const LoginScreen = ({ navigation, route }: Props) => {
               onChangeText={setPassword}
               showPasswordToggle
             />
-            
+
             <Text
               className="text-primary dark:text-dark-primary text-right mb-4"
-              onPress={() => Linking.openURL(`${process.env.EXPO_PUBLIC_WEB_URL}/forgot-password`)}
+              onPress={() =>
+                Linking.openURL(`${process.env.EXPO_PUBLIC_WEB_URL}/forgot-password`)
+              }
             >
               Forgot Password?
             </Text>
-            
-            <Button title="Sign In" onPress={handleLogin} loading={isLoading} disabled={isLoading} />
+
+            <Button
+              title="Sign In"
+              onPress={handleLogin}
+              loading={isLoading}
+              disabled={isLoading}
+            />
+
+            {/* Simplified Try Demo Button */}
+            <TouchableOpacity
+              className="border border-primary dark:border-dark-primary rounded-lg py-3 items-center mt-3"
+              onPress={() => navigation.navigate('DemoChat')}
+            >
+              <Text className="text-primary dark:text-dark-primary font-semibold text-base">
+                Try Demo
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View className="mt-6 flex-row justify-center">
             <Text className="text-secondary dark:text-dark-secondary">
-              Don't have an account?{' '}
+              Don’t have an account?{' '}
             </Text>
             <Text
               className="text-primary dark:text-dark-primary font-medium"
@@ -146,4 +165,4 @@ export const LoginScreen = ({ navigation, route }: Props) => {
       </View>
     </View>
   );
-}; 
+};
